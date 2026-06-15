@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRAFT Studio - Professional Prompt Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains+Mono', monospace; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        
+        .progress-bar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-30 bg-slate-900 text-white border-b border-slate-800 h-16 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-br from-cyan-400 to-blue-500 p-2 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold">CRAFT Studio</h1>
+                    <p class="text-[10px] text-cyan-300 uppercase tracking-widest font-black">Multi-Format Suite</p>
+                </div>
+            </div>
+            <div class="hidden md:flex flex-col items-end w-40 gap-1">
+                <div class="flex justify-between w-full text-[10px] uppercase font-bold text-slate-400">
+                    <span>Build Progress</span><span id="progress-text">0%</span>
+                </div>
+                <div class="relative h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                    <div id="progress-fill" class="progress-bar h-full bg-cyan-50" style="width: 0%; background-color: #22d3ee;"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Sidebar Controls -->
+        <div class="lg:col-span-5 space-y-6">
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <!-- Header Indicator (Send Mode Fixed) -->
+                <div class="px-5 py-4 border-b bg-slate-50 flex items-center justify-between">
+                    <span class="text-xs font-black uppercase text-cyan-600 tracking-wider flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Blueprint Composer
+                    </span>
+                    <span class="text-[10px] bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-full">Send Mode</span>
+                </div>
+                
+                <!-- Section Tabs -->
+                <div class="p-2 bg-slate-50 border-b flex gap-1 overflow-x-auto no-scrollbar" id="section-tabs">
+                    <!-- Dynamic Tabs -->
+                </div>
+
+                <div id="section-container" class="p-5 min-h-[400px] transition-colors duration-300">
+                    <div class="mb-6">
+                        <div class="flex items-center gap-2 mb-1">
+                            <div id="section-badge" class="w-6 h-6 rounded flex items-center justify-center text-white text-[10px] font-black">C</div>
+                            <h2 id="section-title" class="text-sm font-bold uppercase tracking-tight text-slate-700">Context</h2>
+                        </div>
+                        <p id="section-tagline" class="text-xs text-slate-500 italic"></p>
+                    </div>
+
+                    <div id="fields-area" class="space-y-4">
+                        <!-- Dynamic Fields -->
+                    </div>
+
+                    <div class="mt-8 flex items-center justify-between gap-3 pt-4 border-t">
+                        <button id="prev-btn" class="inline-flex items-center justify-center rounded-md text-sm font-medium border border-slate-200 bg-white hover:bg-slate-100 h-10 px-4 py-2 disabled:opacity-50">Back</button>
+                        <button id="next-btn" class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-slate-900 text-white hover:bg-slate-800 h-10 px-4 py-2 flex-1 ml-4">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mode Details Card -->
+            <div id="mode-info-card" class="bg-slate-900 text-white rounded-xl p-5 shadow-sm">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-2 h-2 rounded-full bg-indigo-400"></div>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-indigo-400">Deep Link Launch Ready</p>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">Fill out the CRAFT sections to draft three alternate configurations locally. Select your favorite strategy, copy it, and launch directly into Gemini instantly.</p>
+            </div>
+        </div>
+
+        <!-- Main Workspace -->
+        <div class="lg:col-span-7 space-y-6">
+            <div class="bg-white rounded-xl border border-slate-200 shadow-xl overflow-hidden min-h-[600px] flex flex-col">
+                <div class="p-5 border-b border-slate-100 flex flex-row items-center justify-between flex-wrap gap-4 bg-slate-50/50">
+                    <div>
+                        <h3 class="text-lg font-bold leading-none tracking-tight">Studio Workspace</h3>
+                        <p class="text-xs text-slate-500 mt-1">Select and review prompt strategies below.</p>
+                    </div>
+                    <!-- Variant Switcher -->
+                    <div id="variant-nav" class="hidden flex items-center bg-slate-200/50 rounded-lg p-1 gap-1 border border-slate-200">
+                        <button onclick="switchVariant(0)" class="v-tab px-3 py-1 rounded text-[10px] font-black uppercase bg-cyan-600 text-white shadow-sm">V1: Pro</button>
+                        <button onclick="switchVariant(1)" class="v-tab px-3 py-1 rounded text-[10px] font-black uppercase text-slate-500 hover:bg-slate-200">V2: Creative</button>
+                        <button onclick="switchVariant(2)" class="v-tab px-3 py-1 rounded text-[10px] font-black uppercase text-slate-500 hover:bg-slate-200">V3: Concise</button>
+                    </div>
+                </div>
+
+                <div class="p-5 flex-1 relative bg-white flex flex-col">
+                    <div id="empty-state" class="flex flex-col items-center justify-center text-center p-20 opacity-40 flex-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="mb-4 text-cyan-600"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <p class="text-sm font-bold text-slate-600">Enter details on the left and click "Generate Blueprint" to construct your prompt variants.</p>
+                    </div>
+                    
+                    <div id="output-content" class="hidden animate-fade-in flex-1 flex flex-col justify-between">
+                        <div class="space-y-4 flex-1 flex flex-col">
+                            <div class="flex items-center justify-between">
+                                <span id="active-variant-badge" class="text-[10px] font-black tracking-widest text-cyan-600 uppercase bg-cyan-50 border border-cyan-100 px-3 py-1 rounded-full">V1: Professional Focus</span>
+                                <span class="text-xs text-slate-400">Offline Compiled</span>
+                            </div>
+                            <div id="prompt-code" class="p-6 bg-slate-900 text-cyan-100 mono text-xs rounded-xl whitespace-pre-wrap border border-slate-800 h-[380px] overflow-y-auto leading-relaxed"></div>
+                        </div>
+
+                        <div class="flex gap-2 pt-6 border-t mt-8 flex-wrap">
+                            <button onclick="copyPrompt()" class="flex-1 bg-slate-900 text-white h-11 rounded-md text-sm font-bold hover:bg-slate-800 transition-colors" id="copy-btn">Copy Blueprint</button>
+                            <button onclick="handleLaunch()" class="flex-1 border border-indigo-200 bg-indigo-50 text-indigo-700 h-11 rounded-md text-sm font-bold hover:bg-indigo-100 flex items-center justify-center gap-2 transition-colors">
+                                Copy & Launch Gemini
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="max-w-7xl mx-auto p-12 text-center border-t mt-10">
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.4em]">CRAFT Studio &bull; Intelligence Multi-Format System</p>
+    </footer>
+
+    <script>
+        let currentSection = 'C';
+        let values = {};
+        
+        let variantsData = []; 
+        let activeVariantIndex = 0;
+
+        const sections = [
+            {
+                key: "C", label: "Context", color: "bg-cyan-600", soft: "bg-cyan-50/50",
+                tagline: "Set the business scenario and core software environment.",
+                fields: [
+                    { key: "ctx_category", label: "Task Category", type: "select", options: ["Email drafting","Excel / spreadsheet work","Salesforce Lead/Case mgmt","Data entry & cleaning","Report writing","Meeting notes","Process documentation","Customer comms","Graphic Design / PDF","Other"] },
+                    { key: "ctx_tool", label: "Software / Tool", type: "select", options: ["Salesforce CRM","Microsoft Excel","Microsoft Word","Microsoft PowerPoint","Microsoft Outlook","Google Docs","Google Sheets","Google Slides","Gmail","Adobe Photoshop","Adobe Acrobat","Notion","Slack","No specific tool"] },
+                    { key: "ctx_background", label: "Detailed Background", type: "textarea", placeholder: "What is the problem you're solving or the data you're working with?" }
+                ]
+            },
+            {
+                key: "R", label: "Role", color: "bg-emerald-600", soft: "bg-emerald-50/50",
+                tagline: "Define the expert persona and desired professional tone.",
+                fields: [
+                    { key: "role_persona", label: "AI Persona", type: "select", options: ["Administrative Assistant","Salesforce Admin","Excel expert","CRM Specialist","Business writing specialist","Data analyst","HR administrator"] },
+                    { key: "role_tone", label: "Communication Tone", type: "select", options: ["Formal & professional","Friendly & approachable","Concise & direct","Authoritative","Diplomatic"] }
+                ]
+            },
+            {
+                key: "A", label: "Action", color: "bg-orange-600", soft: "bg-orange-50/50",
+                tagline: "The core deliverable and specific task instructions.",
+                fields: [
+                    { key: "action_type", label: "Primary Action", type: "select", options: ["Write / draft from scratch","Rewrite / improve text","Summarise document","Create Excel formula / SFDC Validation","Clean / reformat data","Analyse CRM metrics"] },
+                    { key: "action_detail", label: "Specific Requirements", type: "textarea", placeholder: "List any specific steps, constraints, or unique elements needed." }
+                ]
+            },
+            {
+                key: "F", label: "Format", color: "bg-violet-600", soft: "bg-violet-50/50",
+                tagline: "Structure, technical format, and length requirements.",
+                fields: [
+                    { key: "fmt_type", label: "Output Format", type: "select", options: ["Email","Bullet points","Step-by-step guide","Table (Markdown)","Generate Template/File","Excel Spreadsheet (.csv)","Word Document (.doc)","PowerPoint Slides (.ppt)","Data Export (.json)"] },
+                    { key: "fmt_length", label: "Output Length", type: "select", options: ["Brief (< 100 words)","Standard (250-500 words)","Detailed (500+ words)"] }
+                ]
+            },
+            {
+                key: "T", label: "Target", color: "bg-sky-700", soft: "bg-sky-50/50",
+                tagline: "Identify the recipient and their technical proficiency.",
+                fields: [
+                    { key: "tgt_recipient", label: "Primary Audience", type: "select", options: ["Senior executive","Direct manager","Colleague / peer","External client / Lead","Vendor / supplier"] },
+                    { key: "tgt_skill", label: "Tech Proficiency", type: "select", options: ["Non-technical","Standard office user","Salesforce Power user"] }
+                ]
+            }
+        ];
+
+        function init() {
+            renderTabs();
+            renderSection();
+        }
+
+        function renderTabs() {
+            const container = document.getElementById('section-tabs');
+            container.innerHTML = sections.map(s => `
+                <button onclick="setSection('${s.key}')" class="section-tab-btn px-4 py-2 rounded-md text-[10px] font-black uppercase transition-all whitespace-nowrap ${currentSection === s.key ? 'bg-white text-cyan-600 shadow-sm border border-slate-100' : 'text-slate-400'}" id="tab-${s.key}">
+                    ${s.key}. ${s.label}
+                </button>
+            `).join('');
+        }
+
+        function renderSection() {
+            const section = sections.find(s => s.key === currentSection);
+            const container = document.getElementById('section-container');
+            const fieldsArea = document.getElementById('fields-area');
+            
+            container.className = `p-5 min-h-[400px] transition-colors duration-300 ${section.soft}`;
+            document.getElementById('section-badge').className = `w-6 h-6 rounded flex items-center justify-center text-white text-[10px] font-black ${section.color}`;
+            document.getElementById('section-badge').textContent = section.key;
+            document.getElementById('section-title').textContent = section.label;
+            document.getElementById('section-tagline').textContent = section.tagline;
+
+            document.querySelectorAll('.section-tab-btn').forEach(btn => {
+                btn.className = `section-tab-btn px-4 py-2 rounded-md text-[10px] font-black uppercase transition-all whitespace-nowrap ${btn.id === 'tab-' + currentSection ? 'bg-white text-cyan-600 shadow-sm border border-slate-100' : 'text-slate-400'}`;
+            });
+
+            fieldsArea.innerHTML = section.fields.map(f => {
+                const val = values[f.key] || "";
+                return `
+                    <div class="space-y-1.5 animate-fade-in">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">${f.label}</label>
+                        ${f.type === 'select' ? `
+                            <select onchange="updateValue('${f.key}', this.value)" class="w-full h-11 px-3 rounded-md border border-slate-200 bg-white text-sm focus:ring-2 focus:ring-cyan-500 outline-none shadow-sm">
+                                <option value="">Select option...</option>
+                                ${f.options.map(o => `<option value="${o}" ${val === o ? 'selected' : ''}>${o}</option>`).join('')}
+                            </select>
+                        ` : `
+                            <textarea oninput="updateValue('${f.key}', this.value)" rows="5" placeholder="${f.placeholder}" class="w-full p-3 rounded-md border border-slate-200 bg-white text-sm focus:ring-2 focus:ring-cyan-500 outline-none shadow-sm leading-relaxed">${val}</textarea>
+                        `}
+                    </div>
+                `;
+            }).join('');
+
+            const idx = sections.findIndex(s => s.key === currentSection);
+            document.getElementById('prev-btn').disabled = idx === 0;
+            document.getElementById('prev-btn').onclick = () => setSection(sections[idx - 1].key);
+            
+            const nextBtn = document.getElementById('next-btn');
+            if (idx === sections.length - 1) {
+                nextBtn.textContent = "Generate Blueprint";
+                nextBtn.className = "inline-flex items-center justify-center rounded-md text-sm font-black uppercase tracking-widest bg-cyan-600 text-white hover:bg-cyan-700 h-11 px-4 py-2 flex-1 ml-4 shadow-md transition-all";
+                nextBtn.onclick = handleFinalAction;
+            } else {
+                nextBtn.textContent = "Next Step";
+                nextBtn.className = "inline-flex items-center justify-center rounded-md text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 h-11 px-4 py-2 flex-1 ml-4 transition-all";
+                nextBtn.onclick = () => setSection(sections[idx + 1].key);
+            }
+        }
+
+        function setSection(key) { currentSection = key; renderSection(); }
+
+        function updateValue(key, val) { values[key] = val; updateProgress(); }
+
+        function updateProgress() {
+            let filled = 0; let total = 0;
+            sections.forEach(s => s.fields.forEach(f => { total++; if (values[f.key]) filled++; }));
+            const p = Math.round((filled / total) * 100);
+            document.getElementById('progress-text').textContent = p + '%';
+            document.getElementById('progress-fill').style.width = p + '%';
+        }
+
+        function buildPrompt(variationIndex = 0) {
+            const variationPrompts = [
+                "Focus on strict professional standards, accuracy, and clear business alignment.",
+                "Adopt a highly engaging, expressive, and creatively optimized perspective.",
+                "Prioritize maximum efficiency, extreme brevity, and strict formatting with zero conversational fluff."
+            ];
+            
+            const isFile = (values.fmt_type || "").includes("(") || values.fmt_type === "Generate Template/File";
+            const fileHint = isFile ? `IMPORTANT: Provide the output purely as raw content for a ${values.fmt_type} file. No conversational conversational preamble.` : "";
+
+            const core = [
+                `Context: ${values.ctx_category || 'General task'} using ${values.ctx_tool || 'productivity software'}.`,
+                `Background: ${values.ctx_background || 'No background provided'}.`,
+                `Role: ${values.role_persona || 'Expert Assistant'} with a ${values.role_tone || 'professional'} tone.`,
+                `Objective: ${values.action_type || 'Drafting'}. ${values.action_detail || 'Produce quality content'}.`,
+                `Format: ${values.fmt_type || 'Standard'} / ${values.fmt_length || 'Standard length'}.`,
+                `Recipient: ${values.tgt_recipient || 'Colleague'} (${values.tgt_skill || 'Standard skills'}).`,
+                `Variation Direction: ${variationPrompts[variationIndex]}`,
+                fileHint
+            ].filter(l => l !== "");
+
+            return `CRAFT Office Studio Brief:\n\n${core.join("\n")}\n\nDeliver the final output based on these constraints.`;
+        }
+
+        function handleFinalAction() {
+            document.getElementById('empty-state').classList.add('hidden');
+            
+            variantsData = [
+                { title: "V1: Professional Focus", prompt: buildPrompt(0) },
+                { title: "V2: Creative Focus", prompt: buildPrompt(1) },
+                { title: "V3: Concise Focus", prompt: buildPrompt(2) }
+            ];
+            activeVariantIndex = 0;
+            renderResult();
+        }
+
+        function renderResult() {
+            const data = variantsData[activeVariantIndex];
+            if (!data) return;
+
+            document.getElementById('prompt-code').textContent = data.prompt;
+            document.getElementById('active-variant-badge').textContent = data.title;
+            document.getElementById('output-content').classList.remove('hidden');
+            
+            const nav = document.getElementById('variant-nav');
+            nav.classList.remove('hidden');
+            document.querySelectorAll('.v-tab').forEach((t, i) => {
+                t.className = `v-tab px-3 py-1 rounded text-[10px] font-black uppercase transition-all ${i === activeVariantIndex ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`;
+            });
+        }
+
+        function switchVariant(idx) {
+            activeVariantIndex = idx;
+            renderResult();
+        }
+
+        // Safe Fallback Clipboard Copier
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Avoid scrolling to bottom
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            let successful = false;
+            try {
+                successful = document.execCommand('copy');
+            } catch (err) {
+                console.error('Fallback copy method failed', err);
+            }
+
+            document.body.removeChild(textArea);
+            return successful;
+        }
+
+        function copyPrompt() {
+            const data = variantsData[activeVariantIndex];
+            if (!data) return;
+            
+            const copied = fallbackCopy(data.prompt);
+            if (copied) {
+                const btn = document.getElementById('copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = "Copied Blueprint!";
+                setTimeout(() => btn.textContent = originalText, 2000);
+            }
+        }
+
+        function handleLaunch() {
+            const data = variantsData[activeVariantIndex];
+            const p = data ? data.prompt : buildPrompt(0);
+            
+            fallbackCopy(p);
+            window.open("https://gemini.google.com/app", "_blank");
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
